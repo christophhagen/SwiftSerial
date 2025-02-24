@@ -143,8 +143,9 @@ public actor SerialPort {
     #elseif os(OSX)
         typealias specialCharactersTuple = (VEOF: cc_t, VEOL: cc_t, VEOL2: cc_t, VERASE: cc_t, VWERASE: cc_t, VKILL: cc_t, VREPRINT: cc_t, spare1: cc_t, VINTR: cc_t, VQUIT: cc_t, VSUSP: cc_t, VDSUSP: cc_t, VSTART: cc_t, VSTOP: cc_t, VLNEXT: cc_t, VDISCARD: cc_t, VMIN: cc_t, VTIME: cc_t, VSTATUS: cc_t, spare: cc_t)
         var specialCharacters: specialCharactersTuple = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0) // NCCS = 20
+    #else
+        #error("Unsupported platform")
     #endif
-
         specialCharacters.VMIN = cc_t(minimumBytesToRead)
         specialCharacters.VTIME = cc_t(timeout)
         settings.c_cc = specialCharacters
