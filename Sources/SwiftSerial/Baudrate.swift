@@ -61,6 +61,12 @@ public enum BaudRate {
 
     /** Baud 230400 */
     case baud230400
+
+    /** A custom baud rate
+     - Note: May not be supported by the hardware
+     */
+    case custom(baud: UInt)
+
 #if os(Linux)
 
     /** Baud 460800 (only available on Linux) */
@@ -161,6 +167,8 @@ public enum BaudRate {
         case .baud4000000:
             return speed_t(B4000000)
 #endif
+        case .custom(let value):
+            return value
         }
     }
 }
