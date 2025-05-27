@@ -168,7 +168,7 @@ public enum BaudRate {
             return speed_t(B4000000)
 #endif
         case .custom(let value):
-            return value
+            return speed_t(value)
         }
     }
 }
