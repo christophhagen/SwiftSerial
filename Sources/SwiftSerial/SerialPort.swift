@@ -271,6 +271,38 @@ public actor SerialPort {
             write(fileDescriptor, ptr.baseAddress, bytes.count)
         }
     }
+
+
+    #if os(OSX)
+    /**
+     List all available serial ports.
+     - Returns: A String array containing the paths to all available serial ports.
+     */
+    public static func listAvailablePorts() throws -> [String] {
+        let task = Process()
+        task.launchPath = "/bin/zsh"
+        task.arguments = ["-c", "for port in /dev/tty.*; do echo \"$port\"; done"]
+
+        let pipe = Pipe()
+        task.standardOutput = pipe
+        task.standardError = Pipe()
+
+        try task.run()
+        task.waitUntilExit()
+
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        guard let output = String(data: data, encoding: .utf8) else {
+            return []
+        }
+
+        let ports = output
+            .split(separator: "\n")
+            .map { String($0) }
+            .filter { !$0.isEmpty }
+
+        return ports
+    }
+    #endif
 }
 
 private func openPort(path: String, readWriteParam: Int32) -> Int32 {
